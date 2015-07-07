@@ -8,7 +8,7 @@ using System.Linq.Dynamic;
 
 namespace ArduinoControl.Rules
 {
-    public class DeviceRules
+    public class DeviceRules : IDeviceRules
     {
         #region Private Fields
 

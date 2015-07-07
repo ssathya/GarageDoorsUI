@@ -55,7 +55,7 @@ namespace ArduinoControl.Models
     {
         #region Public Properties
 
-        [Required]
+        //[Required]
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }

@@ -1,16 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Anotar.NLog;
+using ArduinoControl.Rules;
+using System;
 using System.Web.Mvc;
 
 namespace ArduinoControl.Controllers
 {
     public class DeviceController : Controller
     {
+        private IDeviceRules _deviceRules;
+
+        public DeviceController(IDeviceRules deviceRules)
+        {
+            this._deviceRules = deviceRules;
+        }
+
         // GET: Device
         public ActionResult Index()
         {
+            var count = _deviceRules.GetRecordCount();
+            //ViewBag.Count = count.ToString();
             return View();
         }
 
@@ -83,6 +91,30 @@ namespace ArduinoControl.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeviceList(int jtStartIndex = 0, int jtPageSize = 10, string jtSorting = null)
+        {
+            if (string.IsNullOrEmpty(jtSorting))
+                jtSorting = "DeviceName ASC";
+            try
+            {
+                var returnList = _deviceRules.Get(jtPageSize, jtStartIndex, jtSorting);
+                int totalRecords = _deviceRules.GetRecordCount();
+                return Json(new
+                {
+                    Result = "OK",
+                    Records = returnList,
+                    TotalRecordCount = totalRecords
+                });
+            }
+            catch (Exception e)
+            {
+                LogTo.Fatal("Error while extracting data:\r\n:Error message: " +
+                    e.Message);
+                return Json(new { Result = "ERROR", Message = "Error while retrieving data; please try later\n" + e.Message });
             }
         }
     }

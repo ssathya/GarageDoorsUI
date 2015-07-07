@@ -9,6 +9,9 @@ namespace ArduinoControl.Models.AppModel.ViewModel
         [MaxLength(50)]
         public string UserName { get; set; }
 
+        [MaxLength(30)]
+        public string DeviceName { get; set; }
+
         [MaxLength(255)]
         public string DataSourceUrl { get; set; }
 
