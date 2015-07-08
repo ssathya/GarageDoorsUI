@@ -8,6 +8,7 @@
 }
 <h2>Device Manager</h2>
 <div id="DeviceViewTable" style="margin: auto"></div>
+<div id="DeviceViewTable" style="margin:inherit"></div>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -21,13 +22,82 @@
                 createAction: '@Url.Action("Create")',
                 updateAction: '@Url.Action("Edit")',
                 deleteAction: '@Url.Action("Delete")'
-                },
+            },
             fields: {
                 Id: {
                     key: true,
                     create: false,
                     edit: false,
                     list: false
+                },
+                //Child table for Inputs
+                Inputs: {
+                    title: '',
+                    width: '5%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (inputPortView) {
+                        //Create an image that will be used to open child table
+                        var $img = $('<img src="/Content/Misc/xv.png" title="Edit Inputs" />');
+                        //Open child table when user clicks the image
+                        $img.click(function () {
+                            $('#DeviceViewTable').jtable('openChildTable',
+                                $img.closest('tr'),
+                                {
+                                    title: inputPortView.record.DeviceName,
+                                    actions: {
+                                        listAction: '@Url.Action("InputPortsList")?DeviceId=' + inputPortView.record.Id,
+                                        deleteAction: '@Url.Action("InputPortsDelete")?Id=' + inputPortView.record.Id,
+                                        updateAction: '@Url.Action("InputPortsUpdate")',
+                                        createAction: '@Url.Action("InputPortsCreate")'
+                                    },
+                                    fields: {
+                                        DeviceId: {
+                                            type: 'hidden',
+                                            defaultValue: inputPortView.record.DeviceId
+                                        },
+                                        Id: {
+                                            key: true,
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
+                                        Name: {
+                                            title: 'Name'
+                                        },
+                                        Unit: {
+                                            tilte: 'Value Units'
+                                        },
+                                        MultiplicationFactor: {
+                                            title: 'Multiplication Factor'
+                                        },
+                                        NominalLowValue: {
+                                            title: 'Nominal Low'
+                                        },
+                                        NominalHighValue: {
+                                            title: 'Nominal High'
+                                        },
+                                        AlarmLow: {
+                                            title: 'Alarm Low'
+                                        },
+                                        AlarmHigh: {
+                                            title: 'Alarm High'
+                                        },
+                                        AlarmNotificationAddress: {
+                                            title: 'Alarm Send Addr.'
+                                        },
+                                        MinutesBetweenNotification: {
+                                            title: 'Notification freq'
+                                        }
+                                    }
+                                }, function (data) { //opened handler
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
                 },
                 DeviceName: {
                     title: 'Device Name',
@@ -57,12 +127,13 @@
                     edit: true,
                     delete: true,
                     list: false,
-                    input: function(data) {
+                    input: function (data) {
                         return '@Html.AntiForgeryToken()';
                     }
                 }
             }
         });
-        $('#DeviceViewTable').jtable('load');
+        
+        $('#DeviceViewTable').jtable('load');        
     });
 </script>

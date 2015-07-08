@@ -1,17 +1,22 @@
 ﻿using Anotar.NLog;
+using ArduinoControl.Models.AppModel.ViewModel;
 using ArduinoControl.Rules;
+using AutoMapper.Internal;
 using System;
 using System.Web.Mvc;
 
 namespace ArduinoControl.Controllers
 {
+    [Authorize]
     public class DeviceController : Controller
     {
-        private IDeviceRules _deviceRules;
+        private readonly IDeviceRules _deviceRules;
+        private readonly string _exceptinMessage;
 
         public DeviceController(IDeviceRules deviceRules)
         {
             this._deviceRules = deviceRules;
+            _exceptinMessage = "Error while accessing database";
         }
 
         // GET: Device
@@ -22,75 +27,127 @@ namespace ArduinoControl.Controllers
             return View();
         }
 
-        // GET: Device/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: Device/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
         // POST: Device/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(DeviceView deviceView)
         {
+            if (deviceView != null && User != null)
+                deviceView.UserName = User.Identity.Name;
             try
             {
-                // TODO: Add insert logic here
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.GetEnumerator();
+                    var message = errors.ToNullSafeString();
 
-                return RedirectToAction("Index");
+                    return Json(new
+                    {
+                        Result = "ERROR",
+                        Message = "Form is not valid! Error " +
+                                  message
+                    });
+                }
+                if (_deviceRules.AddRecord(ref deviceView))
+                    return Json(new
+                    {
+                        Result = "OK",
+                        Record = deviceView
+                    });
+                else
+                {
+                    return Json(new
+                    {
+                        Result = "ERROR",
+                        Message = "We tried hard but beyond control\r\n " +
+                                  "Please try later"
+                    });
+                }
             }
-            catch
+            catch (Exception exception)
             {
-                return View();
+                LogTo.Fatal("{0}{1}", _exceptinMessage, exception.Message);
+                return Json(new
+                {
+                    Result = "ERROR",
+                    Message = "We tried hard but beyond control\r\n " +
+                              "Please try later"
+                });
             }
-        }
-
-        // GET: Device/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
         }
 
         // POST: Device/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, DeviceView deviceView)
         {
             try
             {
-                // TODO: Add update logic here
+                if (!ModelState.IsValid)
+                {
+                    var errors = ModelState.GetEnumerator();
+                    var message = errors.ToNullSafeString();
 
-                return RedirectToAction("Index");
+                    return Json(new
+                    {
+                        Result = "ERROR",
+                        Message = "Form is not valid! Error " +
+                                  message
+                    });
+                }
+                if (deviceView != null && id != deviceView.Id)
+                    deviceView.Id = id;
+                _deviceRules.UpdateRecord(ref deviceView);
+                return Json(new
+                {
+                    Result = "OK",
+                    Record = 1
+                });
             }
-            catch
+            catch (Exception e)
             {
-                return View();
+                LogTo.Fatal("Error while adding record \r\nMessage:" +
+                    e.Message);
+                return Json(new
+                {
+                    Result = "ERROR",
+                    Message = "Error while editing record" +
+                              "Please try later"
+                });
             }
-        }
-
-        // GET: Device/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
         }
 
         // POST: Device/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(int id)
         {
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                if (id == default(int))
+                    return Json(new
+                    {
+                        Result = "ERROR",
+                        Message = "Form is not valid! " +
+                                  "Please reload the page"
+                    });
+                var deleteRecord = _deviceRules.DeleteRecord(id);
+                return Json(new
+                {
+                    Result = deleteRecord ? "OK" : "ERROR",
+                    Message = deleteRecord
+                        ? ""
+                        : "Error while deleting record \r\nPlease try later"
+                });
             }
-            catch
+            catch (Exception exception)
             {
-                return View();
+                LogTo.Fatal("Error while deleting record ");
+                LogTo.Fatal(exception.Message);
+                return Json(new
+                {
+                    Result = "ERROR",
+                    Message = "Error while deleting record \r\nPlease try later"
+                });
             }
         }
 
@@ -116,6 +173,36 @@ namespace ArduinoControl.Controllers
                     e.Message);
                 return Json(new { Result = "ERROR", Message = "Error while retrieving data; please try later\n" + e.Message });
             }
+        }
+
+        public ActionResult InputPortsList(int deviceId)
+        {
+            if (deviceId == default(int))
+                return Json(new
+                {
+                    Result = "ERROR",
+                    Message = "Invalid Device Selected"
+                });
+            return Json(new
+            {
+                Result = "OK",
+                Records = ""
+            });
+        }
+
+        public ActionResult InputPortsDelete()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult InputPortsUpdate()
+        {
+            throw new NotImplementedException();
+        }
+
+        public ActionResult InputPortsCreate()
+        {
+            throw new NotImplementedException();
         }
     }
 }

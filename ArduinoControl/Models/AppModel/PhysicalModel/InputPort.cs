@@ -16,6 +16,7 @@ namespace ArduinoControl.Models.AppModel.PhysicalModel
         [StringLength(20)]
         public string Unit { get; set; }
 
+        [Range(0, 1000)]
         public float MultiplicationFactor { get; set; }
 
         public float NominalLowValue { get; set; }
@@ -26,6 +27,7 @@ namespace ArduinoControl.Models.AppModel.PhysicalModel
 
         public float AlaarmHigh { get; set; }
 
+        [StringLength(50), DataType(DataType.EmailAddress)]
         public string AlarmNotificationAddress { get; set; }
 
         [Range(0, 60)]
