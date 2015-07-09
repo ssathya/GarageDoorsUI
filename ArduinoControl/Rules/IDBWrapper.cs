@@ -1,21 +1,10 @@
 ﻿using Anotar.NLog;
-using ArduinoControl.Models.AppModel.PhysicalModel;
-using ArduinoControl.Models.AppModel.ViewModel;
-using System.Collections.Generic;
 
 namespace ArduinoControl.Rules
 {
-    public interface IDbWrapper
+    public interface IDbWrapper<T> where T : class
     {
         #region Public Methods
-
-        /// <summary>
-        /// Adds the record.
-        /// </summary>
-        /// <param name="deviceView">The device view.</param>
-        /// <returns></returns>
-        [LogToErrorOnException]
-        bool AddRecord(ref DeviceView deviceView);
 
         /// <summary>
         /// Deletes the record.
@@ -30,7 +19,7 @@ namespace ArduinoControl.Rules
         /// <param name="iD">The i d.</param>
         /// <returns></returns>
         [LogToErrorOnException]
-        Device GetRecord(int iD);
+        T GetRecord(int iD);
 
         /// <summary>
         /// Gets the record count.
@@ -40,12 +29,20 @@ namespace ArduinoControl.Rules
         int GetRecordCount();
 
         /// <summary>
-        /// Updates the record.
+        /// Adds the record.
         /// </summary>
-        /// <param name="deviceView">The device view.</param>
+        /// <param name="record">The record to be added.</param>
         /// <returns></returns>
         [LogToErrorOnException]
-        bool UpdateRecord(ref DeviceView deviceView);
+        bool AddRecord(ref T record);
+
+        /// <summary>
+        /// Updates the record.
+        /// </summary>
+        /// <param name="record">The record to be updated.</param>
+        /// <returns></returns>
+        [LogToErrorOnException]
+        bool UpdateRecord(ref T record);
 
         #endregion Public Methods
     }

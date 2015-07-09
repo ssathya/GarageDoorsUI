@@ -61,7 +61,8 @@ namespace ArduinoControl.App_Start
         /// <param name="kernel">The kernel.</param>
         private static void RegisterServices(IKernel kernel)
         {
-            kernel.Bind<IDeviceRules>().To<DeviceRules>();
+            kernel.Bind<IDeviceRules>().To<DeviceRules>().InRequestScope();
+            kernel.Bind<IIPortRules>().To<InputPortRules>().InRequestScope();
         }
     }
 }

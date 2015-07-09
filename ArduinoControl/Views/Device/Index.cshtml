@@ -37,7 +37,7 @@
                     sorting: false,
                     edit: false,
                     create: false,
-                    display: function (inputPortView) {
+                    display: function (deviceView) {
                         //Create an image that will be used to open child table
                         var $img = $('<img src="/Content/Misc/xv.png" title="Edit Inputs" />');
                         //Open child table when user clicks the image
@@ -45,17 +45,18 @@
                             $('#DeviceViewTable').jtable('openChildTable',
                                 $img.closest('tr'),
                                 {
-                                    title: inputPortView.record.DeviceName,
+                                    title: deviceView.record.DeviceName,
                                     actions: {
-                                        listAction: '@Url.Action("InputPortsList")?DeviceId=' + inputPortView.record.Id,
-                                        deleteAction: '@Url.Action("InputPortsDelete")?Id=' + inputPortView.record.Id,
+                                        listAction: '@Url.Action("InputPortsList")?DeviceId=' + deviceView.record.Id,
+                                        deleteAction: '@Url.Action("InputPortsDelete")',
                                         updateAction: '@Url.Action("InputPortsUpdate")',
                                         createAction: '@Url.Action("InputPortsCreate")'
                                     },
                                     fields: {
                                         DeviceId: {
                                             type: 'hidden',
-                                            defaultValue: inputPortView.record.DeviceId
+                                            defaultValue: deviceView.record.Id
+
                                         },
                                         Id: {
                                             key: true,
@@ -67,7 +68,7 @@
                                             title: 'Name'
                                         },
                                         Unit: {
-                                            tilte: 'Value Units'
+                                            title: 'Value Units'
                                         },
                                         MultiplicationFactor: {
                                             title: 'Multiplication Factor'
@@ -89,6 +90,88 @@
                                         },
                                         MinutesBetweenNotification: {
                                             title: 'Notification freq'
+                                        },
+                                        __AFT__: {
+                                            create: true,
+                                            edit: true,
+                                            delete: true,
+                                            list: false,
+                                            input: function (data) {
+                                                return '@Html.AntiForgeryToken()';
+                                            }
+                                        }
+                                    }
+                                }, function (data) { //opened handler
+                                    data.childTable.jtable('load');
+                                });
+                        });
+                        //Return image to show on the person row
+                        return $img;
+                    }
+                },
+                //Child table for Output
+                OutPuts: {
+                    title: '',
+                    width: '5%',
+                    sorting: false,
+                    edit: false,
+                    create: false,
+                    display: function (deviceView) {
+                        //Create an image that will be used to open child table
+                        var $img = $('<img src="/Content/Misc/<img src="~/content/misc/android.png" />" title="Edit Inputs" />');
+                        //Open child table when user clicks the image
+                        $img.click(function () {
+                            $('#DeviceViewTable').jtable('openChildTable',
+                                $img.closest('tr'),
+                                {
+                                    title: deviceView.record.DeviceName,
+                                    actions: {
+                                        listAction: '@Url.Action("OutputPortsList")?DeviceId=' + deviceView.record.Id,
+                                        deleteAction: '@Url.Action("OutputPortsDelete")',
+                                        updateAction: '@Url.Action("OutputPortsUpdate")',
+                                        createAction: '@Url.Action("OutputPortsCreate")'
+                                    },
+                                    fields: {
+                                        DeviceId: {
+                                            type: 'hidden',
+                                            defaultValue: deviceView.record.Id
+
+                                        },
+                                        Id: {
+                                            key: true,
+                                            create: false,
+                                            edit: false,
+                                            list: false
+                                        },
+                                        Name: {
+                                            title: 'Name'
+                                        },
+                                        Unit: {
+                                            title: 'Value Units'
+                                        },
+                                        MultiplicationFactor: {
+                                            title: 'Multiplication Factor'
+                                        },
+                                        CommandIssueTime: {
+                                            title: 'Command Time'
+                                        },
+                                        DeviceAckTime: {
+                                            title: 'Ack. Time'
+                                        },
+                                        PulseOrState: {
+                                            title: 'Pulse/State'
+                                        },
+                                        PulseDuration: {
+                                            title: 'Pulse Duration'
+                                        },
+                                        __AFT__: {
+                                            create: true,
+                                            edit: true,
+                                            delete: true,
+                                            list: false,
+                                            input: function (data) {
+                                                return '@Html.AntiForgeryToken()';
+                                            }
                                         }
                                     }
                                 }, function (data) { //opened handler
@@ -133,7 +216,7 @@
                 }
             }
         });
-        
-        $('#DeviceViewTable').jtable('load');        
+
+        $('#DeviceViewTable').jtable('load');
     });
 </script>

@@ -222,6 +222,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DeviceController1.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -255,6 +256,8 @@
     <Compile Include="Rules\DeviceRules.cs" />
     <Compile Include="Rules\IDBWrapper.cs" />
     <Compile Include="Rules\IDeviceRules.cs" />
+    <Compile Include="Rules\IIPortRules.cs" />
+    <Compile Include="Rules\InputPortRules.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +272,7 @@
     <Content Include="Content\jquery-ui\jquery-ui.structure.min.css" />
     <Content Include="Content\jquery-ui\jquery-ui.theme.css" />
     <Content Include="Content\jquery-ui\jquery-ui.theme.min.css" />
+    <Content Include="Content\Misc\android.png" />
     <Content Include="Content\Misc\todo.png" />
     <Content Include="Content\Misc\xv.png" />
     <Content Include="Content\themes\base\accordion.css" />

@@ -5,34 +5,26 @@ using AutoMapper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Dynamic;
 
 namespace ArduinoControl.Rules
 {
-    public class DeviceRules : IDeviceRules
+    public class InputPortRules : IIPortRules
     {
         #region Private Fields
 
-        /// <summary>
-        /// The _device context
-        /// </summary>
         private readonly DeviceContext _deviceContext;
-
-        private readonly IIPortRules _iPortRules;
 
         #endregion Private Fields
 
         #region Public Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DeviceRules"/> class.
+        /// Initializes a new instance of the <see cref="InputPortRules"/> class.
         /// </summary>
         /// <param name="deviceContext">The device context.</param>
-        /// <param name="iPortRules"></param>
-        public DeviceRules(DeviceContext deviceContext, IIPortRules iPortRules)
+        public InputPortRules(DeviceContext deviceContext)
         {
             _deviceContext = deviceContext;
-            _iPortRules = iPortRules;
         }
 
         #endregion Public Constructors
@@ -42,24 +34,24 @@ namespace ArduinoControl.Rules
         /// <summary>
         /// Adds the record.
         /// </summary>
-        /// <param name="deviceView">The device view.</param>
+        /// <param name="record">The record to be added.</param>
         /// <returns></returns>
         [LogToErrorOnException]
-        public bool AddRecord(ref DeviceView deviceView)
+        public bool AddRecord(ref InputPortView record)
         {
             try
             {
-                var newRecord = Mapper.Map<Device>(deviceView);
-                _deviceContext.Devices.Add(newRecord);
+                var newRecord = Mapper.Map<InputPort>(record);
+                _deviceContext.InputPorts.Add(newRecord);
                 _deviceContext.SaveChanges();
-                deviceView = Mapper.Map<DeviceView>(newRecord);
+                record = Mapper.Map<InputPortView>(newRecord);
+                return true;
             }
             catch (Exception e)
             {
                 LogTo.Fatal("Database insert failed.\r\n Error Message :" + e.Message);
                 return false;
             }
-            return true;
         }
 
         /// <summary>
@@ -67,14 +59,14 @@ namespace ArduinoControl.Rules
         /// </summary>
         /// <param name="iD">The i d.</param>
         /// <returns></returns>
+        [LogToErrorOnException]
         public bool DeleteRecord(int iD)
         {
             try
             {
-                var device = _deviceContext.Devices.Find(iD);
+                var device = _deviceContext.InputPorts.Find(iD);
                 if (device == null) return false;
-                DeleteDependentRecords(Mapper.Map<DeviceView>(device));
-                _deviceContext.Devices.Remove(device);
+                _deviceContext.InputPorts.Remove(device);
                 _deviceContext.SaveChanges();
                 return true;
             }
@@ -89,6 +81,7 @@ namespace ArduinoControl.Rules
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
+        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             _deviceContext.SaveChanges();
@@ -96,21 +89,16 @@ namespace ArduinoControl.Rules
         }
 
         /// <summary>
-        /// Gets the specified row count.
+        /// Gets the specified device view.
         /// </summary>
-        /// <param name="rowCount">The row count.</param>
-        /// <param name="startingRow">The starting row.</param>
-        /// <param name="sortColumn">The sort column.</param>
+        /// <param name="deviceView">The device view.</param>
         /// <returns></returns>
-        [LogToErrorOnException]
-        public IEnumerable<DeviceView> Get(int rowCount, int startingRow = 0, string sortColumn = null)
+        public IEnumerable<InputPortView> Get(DeviceView deviceView)
         {
-            if (sortColumn == null)
-                sortColumn = "DeviceName ASC";
-            var values = _deviceContext.Devices.OrderBy(sortColumn).Skip(startingRow).Take(rowCount);
-
-            var devicesList = Mapper.Map<List<DeviceView>>(values.ToList());
-            return devicesList;
+            if (deviceView == null) return null;
+            var inputs = _deviceContext.InputPorts.Where(i => i.DeviceId == deviceView.Id);
+            var inputPortViewList = Mapper.Map<List<InputPortView>>(inputs.ToList());
+            return inputPortViewList;
         }
 
         /// <summary>
@@ -118,62 +106,47 @@ namespace ArduinoControl.Rules
         /// </summary>
         /// <param name="iD">The i d.</param>
         /// <returns></returns>
-        [LogToErrorOnException]
-        public DeviceView GetRecord(int iD)
+        public InputPortView GetRecord(int iD)
         {
-            var record = _deviceContext.Devices.Find(iD);
-            return record == null ? null : Mapper.Map<DeviceView>(record);
+            var record = _deviceContext.InputPorts.Find(iD);
+            return record == null ? null : Mapper.Map<InputPortView>(record);
         }
 
         /// <summary>
         /// Gets the record count.
         /// </summary>
         /// <returns></returns>
-        [LogToErrorOnException]
         public int GetRecordCount()
         {
-            return _deviceContext.Devices.Count();
+            return _deviceContext.InputPorts.Count();
         }
 
         /// <summary>
         /// Updates the record.
         /// </summary>
-        /// <param name="deviceView">The device view.</param>
+        /// <param name="record">The record to be updated.</param>
         /// <returns></returns>
         [LogToErrorOnException]
-        public bool UpdateRecord(ref DeviceView deviceView)
+        public bool UpdateRecord(ref InputPortView record)
         {
-            var device = _deviceContext.Devices.Find(deviceView.Id);
-            if (device == null)
-                return false;
-            Mapper.Map(deviceView, device);
+            var inputs = _deviceContext.InputPorts.Find(record.Id);
+            if (inputs == null) return false;
+            record.Device = inputs.Device;
+            Mapper.Map(record, inputs);
             try
             {
                 _deviceContext.SaveChanges();
-                Mapper.Map(device, deviceView);
+                Mapper.Map(record, inputs);
+                return true;
             }
             catch (Exception exception)
             {
                 LogTo.Fatal("Error while updating record\r\n Message: ");
                 LogTo.Fatal(exception.Message);
-                return false;
+                return false; ;
             }
-            return true;
         }
 
         #endregion Public Methods
-
-        #region Private Methods
-
-        private void DeleteDependentRecords(DeviceView device)
-        {
-            var inputs = _iPortRules.Get(device);
-            foreach (var inputPortView in inputs)
-            {
-                _iPortRules.DeleteRecord(inputPortView.Id);
-            }
-        }
-
-        #endregion Private Methods
     }
 }
