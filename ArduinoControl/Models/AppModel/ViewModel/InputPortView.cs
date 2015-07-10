@@ -11,8 +11,11 @@ namespace ArduinoControl.Models.AppModel.ViewModel
 
         public virtual Device Device { get; set; }
 
-        [StringLength(50)]
+        [StringLength(50), Required]
         public string Name { get; set; }
+
+        [StringLength(50), Required]
+        public string FeedName { get; set; }
 
         [StringLength(20)]
         public string Unit { get; set; }

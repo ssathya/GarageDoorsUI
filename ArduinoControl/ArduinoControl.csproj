@@ -221,6 +221,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DeviceController.cs" />
+    <Compile Include="Controllers\DeviceController2.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\DeviceController1.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -239,12 +240,21 @@
     <Compile Include="Migrations\201507082017130_FixedDataTypesForInputPort.Designer.cs">
       <DependentUpon>201507082017130_FixedDataTypesForInputPort.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507101455332_AddedFeedName.cs" />
+    <Compile Include="Migrations\201507101455332_AddedFeedName.Designer.cs">
+      <DependentUpon>201507101455332_AddedFeedName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507101502166_RemovedEventValuesFromOutputPort.cs" />
+    <Compile Include="Migrations\201507101502166_RemovedEventValuesFromOutputPort.Designer.cs">
+      <DependentUpon>201507101502166_RemovedEventValuesFromOutputPort.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AppModel\PhysicalModel\Device.cs" />
     <Compile Include="Models\AppModel\PhysicalModel\DeviceContext.cs" />
     <Compile Include="Models\AppModel\PhysicalModel\InputPort.cs" />
     <Compile Include="Models\AppModel\PhysicalModel\OutputPort.cs" />
+    <Compile Include="Models\AppModel\PhysicalModel\PortsCommonValues.cs" />
     <Compile Include="Models\AppModel\ViewModel\DeviceView.cs" />
     <Compile Include="Models\AppModel\ViewModel\InputPortView.cs" />
     <Compile Include="Models\AppModel\ViewModel\OutputPortView.cs" />
@@ -258,6 +268,8 @@
     <Compile Include="Rules\IDeviceRules.cs" />
     <Compile Include="Rules\IIPortRules.cs" />
     <Compile Include="Rules\InputPortRules.cs" />
+    <Compile Include="Rules\IOutPortRules.cs" />
+    <Compile Include="Rules\OutPortRules.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -265,7 +277,19 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery-ui\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\jquery-ui\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
     <Content Include="Content\jquery-ui\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\jquery-ui\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\jquery-ui\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\jquery-ui\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\jquery-ui\images\ui-icons_cd0a0a_256x240.png" />
     <Content Include="Content\jquery-ui\jquery-ui.css" />
     <Content Include="Content\jquery-ui\jquery-ui.min.css" />
     <Content Include="Content\jquery-ui\jquery-ui.structure.css" />
@@ -546,6 +570,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507082017130_FixedDataTypesForInputPort.resx">
       <DependentUpon>201507082017130_FixedDataTypesForInputPort.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507101455332_AddedFeedName.resx">
+      <DependentUpon>201507101455332_AddedFeedName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507101502166_RemovedEventValuesFromOutputPort.resx">
+      <DependentUpon>201507101502166_RemovedEventValuesFromOutputPort.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,9 +1,8 @@
-﻿using ArduinoControl.Models.AppModel.PhysicalModel;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace ArduinoControl.Models.AppModel.ViewModel
+namespace ArduinoControl.Models.AppModel.PhysicalModel
 {
-    public class OutputPortView
+    public abstract class PortsCommonValues
     {
         public int Id { get; set; }
 
@@ -22,10 +21,5 @@ namespace ArduinoControl.Models.AppModel.ViewModel
 
         [Range(0, 1000)]
         public float MultiplicationFactor { get; set; }
-
-        public bool PulseOrState { get; set; }
-
-        [Range(1, 60)]
-        public int PulseDuration { get; set; }
     }
 }

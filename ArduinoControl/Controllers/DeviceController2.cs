@@ -12,15 +12,15 @@ namespace ArduinoControl.Controllers
         #region Public Methods
 
         /// <summary>
-        /// Inputs the ports create.
+        /// Outputs the ports create.
         /// </summary>
-        /// <param name="inputPortView">The input port view.</param>
+        /// <param name="outputPortView">The output port view.</param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult InputPortsCreate(InputPortView inputPortView)
+        public ActionResult OutputPortsCreate(OutputPortView outputPortView)
         {
-            if (inputPortView == null)
+            if (outputPortView == null)
                 return Json(new
                 {
                     Result = "ERROR",
@@ -37,11 +37,11 @@ namespace ArduinoControl.Controllers
                         Message = "Form is not valid! "
                     });
                 }
-                if (_iPortRules.AddRecord(ref inputPortView))
+                if (_outPortRules.AddRecord(ref outputPortView))
                     return Json(new
                     {
                         Result = "OK",
-                        Record = inputPortView
+                        Record = outputPortView
                     });
                 return Json(new
                 {
@@ -63,11 +63,11 @@ namespace ArduinoControl.Controllers
         }
 
         /// <summary>
-        /// Inputs the ports delete.
+        /// Outputs the ports delete.
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <returns></returns>
-        public ActionResult InputPortsDelete(int id)
+        public ActionResult OutputPortsDelete(int id)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace ArduinoControl.Controllers
                         Message = "Form is not valid! " +
                                   "Please reload the page"
                     });
-                var deleteRecord = _iPortRules.DeleteRecord(id);
+                var deleteRecord = _outPortRules.DeleteRecord(id);
                 return Json(new
                 {
                     Result = deleteRecord ? "OK" : "ERROR",
@@ -100,11 +100,11 @@ namespace ArduinoControl.Controllers
         }
 
         /// <summary>
-        /// Inputs the ports list.
+        /// Outputs the ports list.
         /// </summary>
         /// <param name="deviceId">The device identifier.</param>
         /// <returns></returns>
-        public ActionResult InputPortsList(int deviceId)
+        public ActionResult OutputPortsList(int deviceId)
         {
             if (deviceId == default(int))
                 return Json(new
@@ -113,21 +113,23 @@ namespace ArduinoControl.Controllers
                     Message = "Invalid Device Selected"
                 });
             var device = _deviceRules.GetRecord(deviceId);
-            var inputsList = _iPortRules.Get(device).ToList();
+            var outputList = _outPortRules.Get(device).ToList();
             return Json(new
             {
                 Result = "OK",
-                Records = inputsList,
-                TotoalRecordCount = inputsList.Count()
+                Records = outputList,
+                TotoalRecordCount = outputList.Count()
             });
         }
 
         /// <summary>
-        /// Inputs the ports update.
+        /// Outputs the ports update.
         /// </summary>
-        /// <param name="inputPortView">The input port view.</param>
+        /// <param name="outputPortView">The output port view.</param>
         /// <returns></returns>
-        public ActionResult InputPortsUpdate(InputPortView inputPortView)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult OutputPortsUpdate(OutputPortView outputPortView)
         {
             try
             {
@@ -143,11 +145,11 @@ namespace ArduinoControl.Controllers
                                   message
                     });
                 }
-                _iPortRules.UpdateRecord(ref inputPortView);
+                _outPortRules.UpdateRecord(ref outputPortView);
                 return Json(new
                 {
                     Result = "OK",
-                    Record = inputPortView
+                    Record = outputPortView
                 });
             }
             catch (Exception e)

@@ -67,6 +67,9 @@
                                         Name: {
                                             title: 'Name'
                                         },
+                                        FeedName: {
+                                            title: 'Feed Name'
+                                        },
                                         Unit: {
                                             title: 'Value Units'
                                         },
@@ -118,7 +121,7 @@
                     create: false,
                     display: function (deviceView) {
                         //Create an image that will be used to open child table
-                        var $img = $('<img src="/Content/Misc/<img src="~/content/misc/android.png" />" title="Edit Inputs" />');
+                        var $img = $('<img src="/Content/Misc/android.png" title="Edit Inputs" />');
                         //Open child table when user clicks the image
                         $img.click(function () {
                             $('#DeviceViewTable').jtable('openChildTable',
@@ -146,20 +149,18 @@
                                         Name: {
                                             title: 'Name'
                                         },
+                                        FeedName: {
+                                            title: 'Feed Name'
+                                        },
                                         Unit: {
                                             title: 'Value Units'
                                         },
                                         MultiplicationFactor: {
                                             title: 'Multiplication Factor'
                                         },
-                                        CommandIssueTime: {
-                                            title: 'Command Time'
-                                        },
-                                        DeviceAckTime: {
-                                            title: 'Ack. Time'
-                                        },
                                         PulseOrState: {
-                                            title: 'Pulse/State'
+                                            title: 'Pulse/State',
+                                            options: { 'true': 'Pulse', 'false': 'Steady State' }
                                         },
                                         PulseDuration: {
                                             title: 'Pulse Duration'

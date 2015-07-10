@@ -63,6 +63,7 @@ namespace ArduinoControl.App_Start
         {
             kernel.Bind<IDeviceRules>().To<DeviceRules>().InRequestScope();
             kernel.Bind<IIPortRules>().To<InputPortRules>().InRequestScope();
+            kernel.Bind<IOutPortRules>().To<OutPortRules>().InRequestScope();
         }
     }
 }

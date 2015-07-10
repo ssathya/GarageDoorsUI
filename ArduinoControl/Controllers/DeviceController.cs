@@ -15,6 +15,7 @@ namespace ArduinoControl.Controllers
         private readonly IDeviceRules _deviceRules;
         private readonly string _exceptionMessage;
         private readonly IIPortRules _iPortRules;
+        private readonly IOutPortRules _outPortRules;
 
         #endregion Private Fields
 
@@ -25,10 +26,12 @@ namespace ArduinoControl.Controllers
         /// </summary>
         /// <param name="deviceRules">The device rules.</param>
         /// <param name="iPortRules">The i port rules.</param>
-        public DeviceController(IDeviceRules deviceRules, IIPortRules iPortRules)
+        /// <param name="outPortRules"></param>
+        public DeviceController(IDeviceRules deviceRules, IIPortRules iPortRules, IOutPortRules outPortRules)
         {
             _deviceRules = deviceRules;
             _iPortRules = iPortRules;
+            _outPortRules = outPortRules;
             _exceptionMessage = "Error while accessing database";
         }
 
@@ -215,25 +218,5 @@ namespace ArduinoControl.Controllers
         }
 
         #endregion Public Methods
-
-        public ActionResult OutputPortsList()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult OutputPortsDelete()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult OutputPortsUpdate()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ActionResult OutputPortsCreate()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
